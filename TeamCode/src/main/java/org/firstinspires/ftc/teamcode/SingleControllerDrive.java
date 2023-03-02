@@ -12,32 +12,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class SingleControllerDrive extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive;
-    private DcMotor leftBackDrive;
-    private DcMotor rightFrontDrive;
-    private DcMotor rightBackDrive;
-
-    private DcMotor liftMotor;
-    private Servo servoGrabber1;
-    private Servo servoGrabber2;
-
+    private final ElapsedTime runtime = new ElapsedTime();
 
     static final double MAX_POS     =    .52;
     static final double MAX_POS2    =    .48;
     static final double MIN_POS     =     1;
     static final double MIN_POS2    =     0;
 
-    static final double MIN_LIFT_POS = 0;
+    double MIN_LIFT_POS = 0;
     double MAX_LIFT_POS = 173 * 34.5;
 
-    double position = 1;
-    double position2 = 0;
+    double position  =   1;
+    double position2 =   0;
 
-    double lAdjust = 0;
-    double lbAdjust = 0;
-    double rAdjust = 0;
-    double rbAdjust = 0;
+    double lAdjust   =   0;
+    double lbAdjust  =   0;
+    double rAdjust   =   0;
+    double rbAdjust  =   0;
 
     double heightAdjustmentCount = 0;
 
@@ -46,14 +37,14 @@ public class SingleControllerDrive extends LinearOpMode {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        DcMotor leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
+        DcMotor leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
+        DcMotor rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+        DcMotor rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-        liftMotor  = hardwareMap.get(DcMotor.class, "lift_motor");
-        servoGrabber1 = hardwareMap.get(Servo.class, "servo_grabber_one");
-        servoGrabber2 = hardwareMap.get(Servo.class, "servo_grabber_two");
+        DcMotor liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
+        Servo servoGrabber1 = hardwareMap.get(Servo.class, "servo_grabber_one");
+        Servo servoGrabber2 = hardwareMap.get(Servo.class, "servo_grabber_two");
 
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -107,8 +98,6 @@ public class SingleControllerDrive extends LinearOpMode {
 
             double liftUp = gamepad1.right_trigger;
             double liftDown = gamepad1.left_trigger;
-
-            boolean raiseMaxHeight = gamepad1.y;
 
             boolean liftUpSlow = gamepad1.b;
             boolean liftDownSlow = gamepad1.a;
@@ -187,13 +176,6 @@ public class SingleControllerDrive extends LinearOpMode {
                 rbAdjust = 0;
             }
 
-            if(raiseMaxHeight && heightAdjustmentCount == 0){
-                MAX_LIFT_POS += 17.3;
-                heightAdjustmentCount++;
-            }else{
-                heightAdjustmentCount = 0;
-            }
-
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
             double leftFrontPower  = axial + lateral + yaw + lAdjust;
@@ -238,7 +220,7 @@ public class SingleControllerDrive extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.update();
