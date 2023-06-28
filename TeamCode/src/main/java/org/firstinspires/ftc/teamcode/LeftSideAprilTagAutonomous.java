@@ -155,59 +155,41 @@ public class LeftSideAprilTagAutonomous extends LinearOpMode
         turnNinety(true);
         telemetry.addData("angle:",getAngle());
         telemetry.update();
-        while (!isStarted() && !isStopRequested())
-        {
+        while (!isStarted() && !isStopRequested()) {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
-            if(currentDetections.size() != 0)
-            {
+            if (currentDetections.size() != 0) {
                 boolean tagFound = false;
 
-                for(AprilTagDetection tag : currentDetections)
-                {
-                    if(tag.id == ID_TAG_OF_INTEREST_1 || tag.id == ID_TAG_OF_INTEREST_3 || tag.id == ID_TAG_OF_INTEREST_2)
-                    {
+                for (AprilTagDetection tag : currentDetections) {
+                    if (tag.id == ID_TAG_OF_INTEREST_1 || tag.id == ID_TAG_OF_INTEREST_3 || tag.id == ID_TAG_OF_INTEREST_2) {
                         tagOfInterest = tag;
                         tagFound = true;
                         break;
                     }
                 }
-
-                if(tagFound)
-                {
+                if (tagFound) {
                     telemetry.addLine("Tag of interest is in sight!\n\nLocation data:");
                     tagToTelemetry(tagOfInterest);
-                }
-                else
-                {
+                } else {
                     telemetry.addLine("Don't see tag of interest :(");
 
-                    if(tagOfInterest == null)
-                    {
+                    if (tagOfInterest == null) {
                         telemetry.addLine("(The tag has never been seen)");
-                    }
-                    else
-                    {
+                    } else {
                         telemetry.addLine("\nBut we HAVE seen the tag before; last seen at:");
                         tagToTelemetry(tagOfInterest);
                     }
                 }
-
-            }
-            else
-            {
+            } else {
                 telemetry.addLine("Don't see tag of interest :(");
 
-                if(tagOfInterest == null)
-                {
+                if(tagOfInterest == null) {
                     telemetry.addLine("(The tag has never been seen)");
-                }
-                else
-                {
+                } else {
                     telemetry.addLine("\nBut we HAVE seen the tag before; last seen at:");
                     tagToTelemetry(tagOfInterest);
                 }
-
             }
 
             telemetry.update();
@@ -215,14 +197,11 @@ public class LeftSideAprilTagAutonomous extends LinearOpMode
         }
 
         /* Update the telemetry */
-        if(tagOfInterest != null)
-        {
+        if(tagOfInterest != null) {
             telemetry.addLine("Tag snapshot:\n");
             tagToTelemetry(tagOfInterest);
             telemetry.update();
-        }
-        else
-        {
+        } else {
             telemetry.addLine("No tag snapshot available, it was never sighted during the init loop :(");
             telemetry.update();
         }
