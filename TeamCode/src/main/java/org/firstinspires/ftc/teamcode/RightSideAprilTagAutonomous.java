@@ -85,6 +85,7 @@ public class RightSideAprilTagAutonomous extends LinearOpMode
     public double ticksPerRotation = 537.6; // For AndyMark NeveRest 20
     public double rpm = 340;
     public double diameter = 10; //cm
+    public double circumference = Math.PI * diameter;
 
     public double angleCorrectionCW = 8.17;
     public double angleCorrectionCCW = 11.26;
@@ -344,7 +345,37 @@ public class RightSideAprilTagAutonomous extends LinearOpMode
      * @param CW True or false
      */
     public void turnNinety(boolean CW){
-        double originalAngle = getAngle();
+        int adjustment = 1;
+        if(!CW){
+            adjustment *= -1;
+        }
+        double distancePerRotation = circumference;
+        double distanceToTurn = 0.25 * distancePerRotation; // Assuming 90-degree turn
+        int ticksToTurn = (int) ((distanceToTurn / circumference) * ticksPerRotation) * adjustment;
+
+        resetEncoders();
+
+        // Set the target position for both motors
+        leftDrive.setTargetPosition(ticksToTurn);
+        rightDrive.setTargetPosition(-ticksToTurn); // Negative for opposite direction
+
+        // Set the run mode to RUN_TO_POSITION
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Set the desired power for both motors
+        double power = 0.5; // Adjust as needed
+        motorsOn(power);
+
+        // Wait until both motors reach their target positions
+        while (leftDrive.isBusy() && rightDrive.isBusy()) {
+            // Do nothing
+        }
+
+        motorsOff();
+        resetEncoders();
+
+        /*double originalAngle = getAngle();
 
         if(CW) {
             if(originalAngle - 90 < 0 && !(originalAngle < 0)) {
@@ -370,7 +401,7 @@ public class RightSideAprilTagAutonomous extends LinearOpMode
                     rightVelo(.75);
                 }
             }
-        }
+        }*/
         motorsOff();
     }
 
