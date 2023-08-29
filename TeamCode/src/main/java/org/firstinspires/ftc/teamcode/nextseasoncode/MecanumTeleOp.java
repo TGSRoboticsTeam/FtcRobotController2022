@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="2022 Steering Tourney Drive", group="Linear Opmode")
+@TeleOp(name="simpledrive", group="Linear Opmode")
 
 public class MecanumTeleOp extends LinearOpMode {
 
@@ -29,6 +29,8 @@ public class MecanumTeleOp extends LinearOpMode {
         DcMotor leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         DcMotor rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         DcMotor rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+
+        DcMotor flyWheel = hardwareMap.get(DcMotor.class, "fly_wheel");
 
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -78,6 +80,17 @@ public class MecanumTeleOp extends LinearOpMode {
             boolean adjustForward = gamepad1.dpad_up;
             boolean adjustLeftTurn = gamepad1.left_bumper;
             boolean adjustRightTurn = gamepad1.right_bumper;
+
+            boolean flyWheel1 = gamepad1.a;
+            boolean flyWheel2 = gamepad1.b;
+
+            if(flyWheel1){
+                flyWheel.setPower(1);
+            }else if(flyWheel2){
+                flyWheel.setPower(-1);
+            }else{
+                flyWheel.setPower(0);
+            }
 
             if(adjustForward){
                 lAdjust = .25;
